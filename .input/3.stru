@@ -1,0 +1,5 @@
+
+struct EsNodeWrapper -> (class EsNode, "DDGraphics_EsNode")
+{
+	void addSub(class EsNode, class One, float, double);
+};

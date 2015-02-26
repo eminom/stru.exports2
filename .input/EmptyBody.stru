@@ -1,0 +1,4 @@
+
+struct EsNodeWrapper -> (class EsNode, "DDGraphics_EsNode")
+{
+};

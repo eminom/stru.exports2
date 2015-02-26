@@ -1,0 +1,6 @@
+
+struct EsNodeWrapper -> (class EsNode, "DDGraphics_EsNode")
+{
+	void setScale(float, float , float);
+	void addSub(class EsNode);
+};

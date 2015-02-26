@@ -1,0 +1,6 @@
+parser
+output
+*.txt
+*.o
+y.tab.c
+lex.yy.c

@@ -1,5 +1,6 @@
 parser
 output
+y.tab.h
 *.txt
 *.o
 y.tab.c

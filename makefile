@@ -6,7 +6,7 @@ SOURCE = y.tab.c\
 all:
 	yacc -d stru2.y
 	flex stru2.l
-	gcc -std=c99 ${SOURCE} -o parser
+	gcc -std=c99 ${SOURCE} -o parser -lm
 
 clean:
 	rm -rf parser

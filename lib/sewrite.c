@@ -7,6 +7,8 @@
 #include "sewrite.h"
 #include "json/cJSON.h"
 
+extern char* strdup(const char*);
+
 ParamLink* curParam = 0;
 StruLink* curStru = 0;
 

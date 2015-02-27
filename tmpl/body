@@ -1,0 +1,8 @@
+
+
+static int ${ExportingClass}_${Name}(lua_State *L) 
+{
+	if(lua_gettop(L)!=${ParamCount}){
+		luaL_error(L, "Need %d parameters for %s", ${ParamCount}, __FUNCTION__);
+	}
+

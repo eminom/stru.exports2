@@ -1,4 +1,10 @@
 
+
+
+// February 2o15. 2o15
+// Coded by eminom
+// 
+
 // Protocols:
 // Macro string: _${stru.origin}MetaString
 // Prefix: es_${method.call}
@@ -12,8 +18,6 @@ var format = require('./format').formatKey;
 var typeIn = require('./typecaster').in;
 var writestd = new (require('./writestd'))();
 var DbgOutput = console.error;
-
-var SCOPE = 'es';
 
 (function(){
 	assert(format);
@@ -43,7 +47,7 @@ function loadTemplate(path){
 }
 
 function processMethodImpl(method, exporting, wrapper){
-	var msg = format(loadTemplate('tmpl/body.tmpl'),{
+	var msg = format(loadTemplate('tmpl/body'),{
 			ExportingClass:exporting,
 			Name:method.call,
 			ParamCount:method.params.length + 1
@@ -148,7 +152,7 @@ function processStru(stru){
 	};
 
 	//Head
-	writestd.format(loadTemplate('tmpl/head.tmpl'), options);
+	writestd.format(loadTemplate('tmpl/head'), options);
 
 	//Structure
 	writestd.format('struct ${WrapperClass} {\n', options);
@@ -198,7 +202,7 @@ function processStru(stru){
 	writestd.out('};');
 
 	//The loader
-	var tailFmt = loadTemplate('tmpl/tail.tmpl');
+	var tailFmt = loadTemplate('tmpl/tail');
 	writestd.format(tailFmt, options);
 }
 
@@ -218,9 +222,11 @@ function makepath(path){
 }
 
 function main(){
-	// DbgOutput('ARGV[1] = ' + process.argv[1]);
 	var filepath = process.argv[2];
-	if (!filepath){return;}
+	if (!filepath){
+		DbgOutput('No input');
+		return;
+	}
 	var chunk = JSON.parse(loadTemplate(filepath));
 
 	var content = chunk['content'];

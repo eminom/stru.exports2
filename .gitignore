@@ -1,7 +1,12 @@
 parser
+parser.exe
+*.inc
+*.old
+*.json
 output
 y.tab.h
 *.txt
 *.o
+*.bat
 y.tab.c
 lex.yy.c

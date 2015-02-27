@@ -1,0 +1,9 @@
+
+
+
+
+//////////////////
+//These codes shall be generated automatically.
+//${TimeString}
+
+#define _${ExportingClass}MetaString	"${MetaName}"

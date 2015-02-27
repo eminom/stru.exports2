@@ -34,7 +34,7 @@ class {
 	return ConstString;
 }
 
-[a-zA-Z][a-zA-Z_0-9]+ {
+[a-zA-Z][a-zA-Z_0-9\$]* {
 	yylval = strdup(yytext);
 	return Var;
 }

@@ -2,7 +2,6 @@
 
 struct EsNodeWrapper -> (class EsNode, "DDGraphics_EsNode")
 {
-	void setScale(float, float , float);
 	void addSub(class EsNode);
 	void setScale(float xs, float ys, float zs);
 	void setTransform(float xf, float yf, float zf);

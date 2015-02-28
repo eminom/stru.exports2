@@ -1,7 +1,15 @@
 
 
+static BlenderNormal* create(const char *path, bool complex = true);
+static BlenderNode* create(const char *name, bool complex = false);
+static AxisNode* create();
+static FieldNode* create(int ac);
+static LightNode* create(float x, float y, float z);
+static MimicNode* create();	
+
 struct EsNodeWrapper -> (class EsNode, "DDGraphics_EsNode")
 {
+	void setScale(float, float , float);
 	void addSub(class EsNode);
 	void setScale(float xs, float ys, float zs);
 	void setTransform(float xf, float yf, float zf);

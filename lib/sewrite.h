@@ -32,20 +32,42 @@ typedef struct StruLinkTag{
 	struct StruLinkTag* next;
 }StruLink;
 
+typedef struct StaticLinkTag{
+	char *name;
+	char *returnType;
+	ParamLink *params;
+	struct StaticLinkTag* next;
+}StaticLink;
+
+
+
+
+
 
 extern char *methodType;
 extern char *methodName;
 extern char *curExporting;
+extern char *stMethodName;
+extern char *stMethodType;
+extern char *curVarType;
 
 extern StruLink *curStru;
 extern ParamLink *curParam;
+extern StaticLink *curStaticLink;
 
 
 ParamLink* se_createParamLink(const char *type, VarType, ParamLink *previous);
 MethodLink* se_createMethodLink(const char *name, const char*type, ParamLink *param, MethodLink *previous);
 StruLink* se_createStruLink(const char *name, const char*org, const char*meta, StruLink *previous);
+StaticLink* se_createStaticLink(const char *name, const char *returnType, ParamLink *param, StaticLink *previous);
 
-void se_writeStruLink(StruLink *now);
 void se_disposeStruLink(StruLink *now);
+void se_disposeStaticLink(StaticLink *now);
+
+
+#include "json/cJSON.h"
+void se_writeStaticLink(cJSON *host, StaticLink *now);
+void se_writeStruLink(cJSON *host, StruLink *now);
+
 
 #endif

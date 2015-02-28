@@ -11,10 +11,15 @@ extern char* strdup(const char*);
 
 ParamLink* curParam = 0;
 StruLink* curStru = 0;
+StaticLink *curStaticLink = 0;
 
 char *methodType = 0;
 char *methodName = 0;
 char *curExporting = 0;
+char *stMethodName = 0;
+char *stMethodType = 0;
+char *curVarType = 0;
+
 
 #define DisposeStr(a)	\
 	if(a){free(a); a = 0;}
@@ -81,6 +86,17 @@ void se_disposeStruLink(StruLink *now){
 	free(now);
 }
 
+StaticLink* se_createStaticLink(const char *name, const char *returnType,
+   ParamLink *param, StaticLink *previous){
+	StaticLink *rv = (StaticLink*)malloc(sizeof(StaticLink));
+	memset(rv, 0, sizeof(*rv));
+	rv->name = strdup(name);
+	rv->returnType = strdup(returnType);
+	rv->params = param;
+	rv->next = previous;
+	return rv;
+}
+
 // Now writings starts.
 
 cJSON* getType(VarType vt){
@@ -145,21 +161,43 @@ void _se_writeStruLinkRun(cJSON *ar, StruLink *now){
 	cJSON_AddItemToArray(ar, o);
 }
 
-
-void se_writeStruLink(StruLink *now)
+void se_writeStruLink(cJSON *host, StruLink *now)
 {
-	cJSON* root = cJSON_CreateObject();
 	cJSON* struArray = cJSON_CreateArray();
-	cJSON_AddItemToObject(root, "content", struArray);
+	cJSON_AddItemToObject(host, "content", struArray);
 	_se_writeStruLinkRun(struArray, now);
+}
 
-	char *outs = cJSON_Print(root);
-	printf("%s\n", outs);
-	free(outs);
-	cJSON_Delete(root);
+void se_disposeStaticLink(StaticLink *now){
+	if(!now){return;}
+	se_disposeStaticLink(now->next);
+	se_disposeParamLink(now->params);
+
+	DisposeStr(now->name)
+	DisposeStr(now->returnType)
+	free(now);
+}
+
+void _se_writeStaticLinkRun(cJSON *ar, StaticLink *now){
+	if (!now) {return;}
+	_se_writeStaticLinkRun(ar, now->next);
+
+	cJSON *o = cJSON_CreateObject();
+	cJSON_AddItemToObject(o, "name", cJSON_CreateString(now->name));
+	cJSON_AddItemToObject(o, "type", cJSON_CreateString(now->returnType));
+	cJSON *mtAr = cJSON_CreateArray();
+	_se_writeParamLinkRun(mtAr, now->params);
+	cJSON_AddItemToObject(o, "params", mtAr);
+	cJSON_AddItemToArray(ar, o);
 }
 
 
+void se_writeStaticLink(cJSON *host, StaticLink *now){
+	//TODO
+	cJSON* staticArray = cJSON_CreateArray();
+	cJSON_AddItemToObject(host, "statics", staticArray);
+	_se_writeStaticLinkRun(staticArray, now);
+}
 
 
 

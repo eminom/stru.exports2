@@ -14,12 +14,17 @@ int yylex(void);
 void yyerror(char*);
 extern int yylineno;
 
+extern char* strdup(const char*);
+
 //#define DBG(...)
 #define DBG(...)	{fprintf(stderr,__VA_ARGS__);fprintf(stderr,"\n");}
 
+#define FREE(_A)	{free(_A);_A=0;}
+#define CHECK_FREE(A)	if(A)FREE(A)
 
 %}
 
+%token TokenConst
 %token TokenStruct
 %token TokenClass
 %token ConstString
@@ -31,8 +36,44 @@ extern int yylineno;
 %token TokenRightEnd
 %token TokenComma
 %token TokenArrow
+%token TokenStar
+%token TokenStatic
+%token TokenEqual;
 
 %%
+
+Program:
+StatementOp{}
+
+Statement:
+StructDefinition{}
+|StaticDefinition{}
+
+StatementOp:
+Statement StatementOp{}
+|{}
+
+StaticDefinition:
+TokenStatic StaticMethodReturnType TokenStar StaticMethodName TokenLeftBracket ParamOp TokenRightBracket TokenSemicolon{
+	curStaticLink = se_createStaticLink(stMethodName, stMethodType
+		,curParam, curStaticLink);
+	curParam = 0;
+	FREE(stMethodType)
+	FREE(stMethodName)
+}
+
+StaticMethodReturnType:
+Var{
+	CHECK_FREE(stMethodType)
+	stMethodType = $1;
+}
+
+StaticMethodName:
+Var{
+	CHECK_FREE(stMethodName)
+	stMethodName = $1;
+}
+
 StructDefinition:
 StructHead StructBody TokenSemicolon {
 	DBG("StructDefinition defined");
@@ -107,16 +148,61 @@ ParamTail:
 TokenComma Param ParamTail{}
 |{}
 
-Param:Var Var{
-	curParam = se_createParamLink($1, vt_Primitive, curParam);
-	free($1);
+Param:VarType Var{
+	curParam = se_createParamLink(curVarType, vt_Primitive, curParam);
+
+	free(curVarType);
+	curVarType = 0;
 }
-|Var {
-	curParam = se_createParamLink($1, vt_Primitive, curParam);
-	free($1);
+|VarType {
+	curParam = se_createParamLink(curVarType, vt_Primitive, curParam);
+
+	free(curVarType);
+	curVarType = 0;
 }
 |TokenClass Var{
 	curParam = se_createParamLink($2, vt_Class, curParam);
+	free($2);
+}
+|VarType TokenEqual Var {
+	curParam = se_createParamLink(curVarType, vt_Primitive, curParam);
+
+	free($3);
+	free(curVarType);
+	curVarType = 0;
+}
+|VarType Var TokenEqual Var {
+	curParam = se_createParamLink(curVarType, vt_Primitive, curParam);
+
+	free($2);
+	free($4);
+	FREE(curVarType)
+}
+
+VarType:
+Var{
+	//DBG("Pure var-type");
+	CHECK_FREE(curVarType)
+	curVarType = $1;
+}
+|TokenConst Var{
+	//DBG("Const var-type");
+	CHECK_FREE(curVarType)
+	int length = (strlen($2) + 1 + 32)*sizeof(char);
+	char *buff = (char*)malloc(length);
+	memset(buff, 0, length);
+	sprintf(buff, "const %s", $2);
+	curVarType = buff;
+	free($2);
+}
+|TokenConst Var TokenStar{
+	//DBG("Const pointer var-type");
+	CHECK_FREE(curVarType)
+	int length = (strlen($2) + 1 + 32)*sizeof(char);
+	char *buff = (char*)malloc(length);
+	memset(buff, 0, length);
+	sprintf(buff, "const %s*", $2);
+	curVarType = buff;
 	free($2);
 }
 
@@ -132,8 +218,17 @@ int main(void){
 		return -1;
 	}
 
-	se_writeStruLink(curStru);
+	cJSON *root = cJSON_CreateObject();
+	se_writeStruLink(root, curStru);
+	se_writeStaticLink(root, curStaticLink);
+
+	char *out = cJSON_Print(root);
+	printf("%s\n", out);
+	free(out);
+	cJSON_Delete(root);
+
 	se_disposeStruLink(curStru);
+	se_disposeStaticLink(curStaticLink);
 	//printf("Parsing done\n");
 }
 

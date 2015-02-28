@@ -17,8 +17,16 @@ extern char *strdup(const char*);
 %option yylineno
 
 %%
+const {
+	return TokenConst;
+}
+
 struct {
 	return TokenStruct;
+}
+
+static {
+	return TokenStatic;
 }
 
 class {
@@ -37,6 +45,10 @@ class {
 [a-zA-Z][a-zA-Z_0-9\$]* {
 	yylval = strdup(yytext);
 	return Var;
+}
+
+\* {
+	return TokenStar;
 }
 
 ; {
@@ -65,6 +77,10 @@ class {
 
 , {
 	return TokenComma;
+}
+
+= {
+	return TokenEqual;
 }
 
 [ \t\r\n] {

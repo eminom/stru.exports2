@@ -1,0 +1,3 @@
+static Blender* create(const float);
+static X* create(const char*);
+static Y* create(const char*path);

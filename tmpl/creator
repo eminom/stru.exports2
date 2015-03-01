@@ -5,9 +5,8 @@ static int ${MethodName}${ReturnType}(lua_State *L)
 	if(lua_gettop(L)!=${ParamCount}){
 		luaL_error(L, "Need %d parameters for %s", ${ParamCount}, __FUNCTION__);
 	}
-
-	// For now, we are all EsNode derives. No one is special.
-	EsNodeWrapper *rv = createUserData<EsNodeWrapper>(L);
-	rv->_ref = ${ReturnType}::${MethodName}(p1,p2,p3);
+${ParamFetching}	// For now, we are all EsNode derives. No one is special.
+	${WrapperClass} *rv = createUserData<${WrapperClass}>(L);
+	rv->_ref = ${ReturnType}::${MethodName}(${ParamList});
 	return 1;
 }

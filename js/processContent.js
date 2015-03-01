@@ -180,7 +180,7 @@ ContentProcessor.prototype.processStru = function(stru){
 	this.writestd.format(tailFmt, options);
 };
 
-ContentProcessor.prototype.processContent = function(content){
+ContentProcessor.prototype.process = function(content){
 	assert(Array.isArray(content));
 	var length = content.length;
 	for(var i=0;i<length;++i){

@@ -17,6 +17,7 @@ var assert = require('assert');
 var format = require('./format').formatKey;
 var typeIn = require('./typecaster').in;
 var ContentProcessor = require('./processContent');
+var StaticProcessor = require('./processStatic');
 var WriteStd = require('./writestd');
 var DbgOutput = console.error;
 
@@ -40,18 +41,17 @@ var DbgOutput = console.error;
 	assert( !'hello'.endsWith(100), 'Test');
 	// DbgOutput('after define');
 	// DbgOutput(String.prototype.startsWith);
+	function makepath(path){
+		if(!path.startsWith('./')){
+			path = './' + path;
+		}
+		return path;
+	}
 })();
 
 function loadTemplate(path){
 	var content = fs.readFileSync(path,{encoding:'utf8'});
 	return content;
-}
-
-function makepath(path){
-	if(!path.startsWith('./')){
-		path = './' + path;
-	}
-	return path;
 }
 
 function main(){
@@ -65,7 +65,12 @@ function main(){
 	var content = chunk['content'];
 	if(content){
 		var cp = new ContentProcessor(new WriteStd());
-		cp.processContent(content);
+		cp.process(content);
+	}
+	var statics = chunk['statics'];
+	if(statics){
+		var sp = new StaticProcessor(new WriteStd());
+		sp.process(statics);
 	}
 }
 

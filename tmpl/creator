@@ -1,0 +1,13 @@
+
+static int ${MethodName}${ReturnType}(lua_State *L)
+{
+	int top = lua_gettop(L);
+	if(lua_gettop(L)!=${ParamCount}){
+		luaL_error(L, "Need %d parameters for %s", ${ParamCount}, __FUNCTION__);
+	}
+
+	// For now, we are all EsNode derives. No one is special.
+	EsNodeWrapper *rv = createUserData<EsNodeWrapper>(L);
+	rv->_ref = ${ReturnType}::${MethodName}(p1,p2,p3);
+	return 1;
+}

@@ -10,6 +10,7 @@ static MimicNode* create();
 struct EsNodeWrapper -> (class EsNode, "DDGraphics_EsNode")
 {
 	void addSub(class EsNode);
+	void setColor(float r, float g, float b, float a);
 	void setScale(float xs, float ys, float zs);
 	void setTransform(float xf, float yf, float zf);
 	void setRotate(float radians, float x, float y, float z);

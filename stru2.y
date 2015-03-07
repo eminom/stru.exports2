@@ -8,7 +8,7 @@
 
 #define YYSTYPE char*
 
-#include "lib/sewrite.h"
+#include "sewrite.h"
 
 int yylex(void);
 void yyerror(char*);

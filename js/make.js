@@ -14,11 +14,14 @@
 
 var fs = require('fs');
 var assert = require('assert');
-var format = require('./format').formatKey;
 var typeIn = require('./typecaster').in;
+
 var ContentProcessor = require('./processContent');
 var StaticProcessor = require('./processStatic');
-var WriteStd = require('./writestd');
+
+var format = require('./third').formatKey;
+var WriteStd = require('./third').writestd;
+
 var DbgOutput = console.error;
 
 (function(){

@@ -2,7 +2,7 @@
 
 var fs = require('fs');
 var assert = require('assert');
-var format = require('./format').formatKey;
+var format = require('./third').formatKey;
 var typeIn = require('./typecaster').in;
 
 function loadTemplate(path){

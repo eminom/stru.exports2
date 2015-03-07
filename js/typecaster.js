@@ -1,7 +1,7 @@
 
 
 //Typecaster for modec.
-var format = require('./format').format;
+var format = require('./third').format;
 var typeCaster = {
 	"int":function(p){return "lua_tointeger(L, " + p + ")"},
 	"float":function(p){return "lua_tonumber(L, " + p + ")"},

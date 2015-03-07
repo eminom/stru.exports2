@@ -3,12 +3,13 @@ SOURCE = y.tab.c\
 	lib/json/cJSON.c\
 	src/sewrite.c
 
-INCLUDE_DIRS = lib
+INCLUDE_DIRS =	-Isrc\
+	-Ilib
 	
 all:
 	yacc -d stru2.y
 	flex stru2.l
-	gcc -std=c99 ${SOURCE} -I${INCLUDE_DIRS} -o parser -lm
+	gcc -std=c99 ${SOURCE} ${INCLUDE_DIRS} -o parser -lm
 
 clean:
 	rm -rf parser

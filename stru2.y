@@ -80,12 +80,12 @@ StructHead StructBody TokenSemicolon {
 }
 
 StructHead:
-TokenStruct Var TokenArrow TokenLeftBracket ExportingClass TokenComma ConstString TokenRightBracket {
+TokenStruct Var TokenArrow TokenLeftBracket ExportingClass TokenComma ConstString DerivesOp TokenRightBracket {
 	DBG("Struct %s is present, meta = %s", $2, $7);
-	curStru = se_createStruLink($2, curExporting, $7, curStru);
+	curStru = se_createStruLink($2, curExporting, $7, curDeriving, curStru);
 	//release
-	free(curExporting);
-	curExporting = 0;
+	FREE(curExporting)
+	CHECK_FREE(curDeriving)
 	free($2);
 	free($7);
 	
@@ -99,6 +99,15 @@ TokenClass Var {
 		abort();
 	}
 	curExporting = $2;
+}
+
+DerivesOp:
+TokenComma TokenClass Var {
+	DBG("Deriving-class %s is present", $3);
+	CHECK_FREE(curDeriving);
+	curDeriving = $3;
+}|{
+	CHECK_FREE(curDeriving);
 }
 
 StructBody:

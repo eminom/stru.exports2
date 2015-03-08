@@ -158,7 +158,7 @@ void _se_writeStruLinkRun(cJSON *ar, StruLink *now){
 	cJSON_AddItemToObject(o, "origin", cJSON_CreateString(now->orgClass));
 	cJSON_AddItemToObject(o, "meta", cJSON_CreateString(now->metaName));
 	if(now->baseClass){
-		cJSON_AddItemToObject(o, "base", cJSON_CreateString(now->baseClass);
+		cJSON_AddItemToObject(o, "base", cJSON_CreateString(now->baseClass));
 	}
 
 	cJSON *methodArray = cJSON_CreateArray();

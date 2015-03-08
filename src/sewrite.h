@@ -27,6 +27,7 @@ typedef struct MethodLinkTag{
 typedef struct StruLinkTag{
 	char *name;
 	char *orgClass;
+	char *baseClass;
 	char *metaName;
 	MethodLink *methods;
 	struct StruLinkTag* next;
@@ -47,6 +48,7 @@ typedef struct StaticLinkTag{
 extern char *methodType;
 extern char *methodName;
 extern char *curExporting;
+extern char *curDeriving;
 extern char *stMethodName;
 extern char *stMethodType;
 extern char *curVarType;
@@ -58,7 +60,7 @@ extern StaticLink *curStaticLink;
 
 ParamLink* se_createParamLink(const char *type, VarType, ParamLink *previous);
 MethodLink* se_createMethodLink(const char *name, const char*type, ParamLink *param, MethodLink *previous);
-StruLink* se_createStruLink(const char *name, const char*org, const char*meta, StruLink *previous);
+StruLink* se_createStruLink(const char *name, const char*org, const char*meta, const char *base, StruLink *previous);
 StaticLink* se_createStaticLink(const char *name, const char *returnType, ParamLink *param, StaticLink *previous);
 
 void se_disposeStruLink(StruLink *now);

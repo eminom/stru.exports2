@@ -16,6 +16,7 @@ StaticLink *curStaticLink = 0;
 char *methodType = 0;
 char *methodName = 0;
 char *curExporting = 0;
+char *curDeriving = 0;
 char *stMethodName = 0;
 char *stMethodType = 0;
 char *curVarType = 0;
@@ -47,11 +48,14 @@ MethodLink* se_createMethodLink(const char *name, const char*type, ParamLink *pa
 	return rv;
 }
 
-StruLink* se_createStruLink(const char *name, const char*org, const char*meta, StruLink *previous){
+StruLink* se_createStruLink(const char *name, const char*org, const char*meta, const char *base, StruLink *previous){
 	StruLink *rv = (StruLink*)malloc(sizeof(StruLink));
 	memset(rv, 0, sizeof(*rv));
 	rv->name = strdup(name);
 	rv->orgClass = strdup(org);
+	if(base){
+		rv->baseClass = strdup(base);
+	}
 	rv->metaName = strdup(meta);
 	rv->next = previous;
 	return rv;
@@ -79,6 +83,7 @@ void se_disposeStruLink(StruLink *now){
 	if(!now){return;}
 	DisposeStr(now->name)
 	DisposeStr(now->orgClass)
+	DisposeStr(now->baseClass)
 	DisposeStr(now->metaName)
 
 	se_disposeMethodLink(now->methods);
@@ -152,6 +157,9 @@ void _se_writeStruLinkRun(cJSON *ar, StruLink *now){
 	cJSON_AddItemToObject(o, "name", cJSON_CreateString(now->name));
 	cJSON_AddItemToObject(o, "origin", cJSON_CreateString(now->orgClass));
 	cJSON_AddItemToObject(o, "meta", cJSON_CreateString(now->metaName));
+	if(now->baseClass){
+		cJSON_AddItemToObject(o, "base", cJSON_CreateString(now->baseClass);
+	}
 
 	cJSON *methodArray = cJSON_CreateArray();
 	_se_writeMethodLinkRun(methodArray, now->methods);

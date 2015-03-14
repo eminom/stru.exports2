@@ -37,7 +37,7 @@ StaticProcessor.prototype.processStatic = function(ss){
 		MethodName:ss.name,
 		ReturnType:ss.type,
 		ParamCount:ss.params.length,
-		WrapperClass:'EsNodeWrapper',  // customized. 
+		WrapperClass:ss.type + 'Wrapper',  // customized. 
 		ParamFetching:whole, 
 		ParamList:paramList,
 	});

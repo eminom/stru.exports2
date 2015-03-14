@@ -14,4 +14,10 @@ void load${ExportingClass}TmpIndex()
 	lua_pushvalue(L, -1);
 	lua_setfield(L, -2, "__index");
 	luaL_register(L, NULL, ${ExportingClass}TmpIndex);
+
+	// Or this code will not compile without _${BaseClass}MetaString
+#if ${BaseClassIsPresent}
+	luaL_getmetatable(L, _${BaseClass}MetaString);
+	lua_setmetatable(L, -1);
+#endif
 }

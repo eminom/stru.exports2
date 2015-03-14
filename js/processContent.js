@@ -66,11 +66,14 @@ ContentProcessor.prototype.processMethodImpl = function(method, exporting, wrapp
 	this.writestd.out('}\n');
 };
 
-ContentProcessor.prototype.processMethod = function(method){
+ContentProcessor.prototype.processMethod = function(method, struOpt){
 	var opt = {
 		ReturnType: method.return,
 		MethodName: method.call,
+		ExportingClass: struOpt.ExportingClass,
+		BaseClass: struOpt.BaseClass,
 	};
+
 	var out = format("${ReturnType} ${MethodName}(", opt);
 	var params = method.params;
 	var pre = false;
@@ -102,7 +105,12 @@ ContentProcessor.prototype.processMethod = function(method){
 	var self = this;
 	this.writestd.scope(
 		function(){
-			var msg = format('_ref->${MethodName}(', opt);
+			var msg;
+			if(opt.BaseClass){
+				msg = format('static_cast<${ExportingClass}*>(_ref)->${MethodName}(', opt);
+			} else {
+				msg = format('_ref->${MethodName}(', opt);
+			}
 			for(var i=0;i<params.length;++i){
 				var p = params[i].isClass ? 'p'+(i+1)+'->_ref' : 'p' +(i+1);
 				msg += (i?',':'') + p;
@@ -114,7 +122,21 @@ ContentProcessor.prototype.processMethod = function(method){
 	this.writestd.out('}');
 };
 
+
+//Exporting the structure part
+// Two main cases shall be taken care
+//  1. class without a base
+//  2. class with a base
 ContentProcessor.prototype.processStru = function(stru){
+	if ( this._flagMap[stru.origin] ) {
+		return;
+	}
+	this._flagMap[stru.origin] = true; //Mark as processed;
+	if ( stru.base && ! this._flagMap[stru.base] && this._contentMap[stru.base] ){
+		var parent = this._contentMap[stru.base];
+		this.processStru(parent);
+	}
+
 	// DbgOutput('Process stru ********************');
 	//this.writestd.out(JSON.stringify(stru));
 	var options = {
@@ -124,12 +146,23 @@ ContentProcessor.prototype.processStru = function(stru){
 		MetaName:stru.meta,
 	};
 
+	if (stru.base){
+		options.BaseClass = stru.base;
+		options.WrapperClassBase = stru.base + "Wrapper";
+		options.BaseClassIsPresent = 1;
+	} else {
+		options.BaseClassIsPresent = 0;
+	}
+
 	//Head
 	this.writestd.format(loadTemplate('tmpl/head'), options);
-
 	//Structure
-	this.writestd.format('struct ${WrapperClass} {\n', options);
+	this.writestd.format('struct ${WrapperClass}', options);
+	if (options.BaseClass) {
+		this.writestd.format(' : public ${WrapperClassBase} ', options);
+	}
 
+	this.writestd.format('{\n', options);
 	//Members(Method, fields)
 	this.writestd.push();
 
@@ -138,11 +171,13 @@ ContentProcessor.prototype.processStru = function(stru){
 	assert(Array.isArray(methods), "must be method");
 	var methodCount = methods.length;
 	for(var i=0;i<methodCount;++i){
-		this.processMethod(methods[i]);
+		this.processMethod(methods[i], options);
 	}
 
 	//Fields
-	this.writestd.format("${ExportingClass}* _ref;", options);
+	if (! options.BaseClass ) {
+		this.writestd.format("${ExportingClass}* _ref;", options);
+	}
 	this.writestd.format("static const char* MetaName;");
 
 	this.writestd.pop();
@@ -183,6 +218,17 @@ ContentProcessor.prototype.processStru = function(stru){
 ContentProcessor.prototype.process = function(content){
 	assert(Array.isArray(content));
 	var length = content.length;
+
+	var flagMap  = {};
+	var contentMap = {};
+	for(var i=0;i<length;++i){
+		var thisOne = content[i];
+		contentMap[thisOne.origin] = thisOne;
+		flagMap[thisOne.origin] = false;
+	}
+
+	this._flagMap = flagMap;
+	this._contentMap = contentMap;
 	for(var i=0;i<length;++i){
 		this.processStru(content[i]);
 	}

@@ -9,15 +9,12 @@
 #define YYSTYPE char*
 
 #include "sewrite.h"
-
+#include "stru_config.h"
 int yylex(void);
 void yyerror(char*);
 extern int yylineno;
 
 extern char* strdup(const char*);
-
-//#define DBG(...)
-#define DBG(...)	{fprintf(stderr,__VA_ARGS__);fprintf(stderr,"\n");}
 
 #define FREE(_A)	{free(_A);_A=0;}
 #define CHECK_FREE(A)	if(A)FREE(A)

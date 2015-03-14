@@ -16,3 +16,10 @@ struct EsNodeWrapper -> (class EsNode, "DDGraphics_EsNode")
 	void setRotate(float radians, float x, float y, float z);
 	void setVisible(bool visible);
 };
+
+struct BlenderNormalWrapper -> (class BlenderNormal, "DDGraphics_BlenderNormal", class BlenderNode){};
+struct BlenderNodeWrapper-> (class BlenderNode, "DDGraphics_BlenderNode", class EsNode){};
+struct AxisNodeWrapper -> (class AxisNode, "DDGraphics_AxisNode", class EsNode){};
+struct FieldNodeWrapper->(class FieldNode, "DDGraphics_FieldNode", class EsNode){};
+struct LightNodeWrapper->(class LightNode, "DDGraphics_LightNode", class EsNode){};
+struct MimicNodeWrapper->(class MimicNode, "DDGraphics_MimicNode", class EsNode){};

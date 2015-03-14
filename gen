@@ -26,7 +26,12 @@ module IGen
 	def self.export_json
 		#print @input_path,"\n"
 		#print @output_path, "\n"
-		return if File.mtime(@input_path) <= File.mtime(@output_path)
+		if not File.exist?(@input_path) then
+			print "#{@input_path} do not exist\n"
+			exit
+		end
+		return if File.exist?(@input_path) and File.exist?(@output_path) and 
+			File.mtime(@input_path) <= File.mtime(@output_path)
 		cmd = "#{@parser_path} < #{@input_path} > #{@output_path}"
 		if true != system(cmd) then
 			print cmd, "\n"
@@ -37,7 +42,9 @@ module IGen
 	end
 
 	def self.export_inc
-		return if File.mtime(@output_path) <= File.mtime(@output_inc)
+		return if not File.exist?(@output_path)
+		return if File.exist?(@output_path) and File.exist?(@output_inc) \
+				and File.mtime(@output_path) <= File.mtime(@output_inc)
 		makejs_path = "#{@script_path}/js/make.js"
 		cmd = 
 		  "#{@node_path} \"#{makejs_path}\" \"#{@output_path}\">\"#{@output_inc}\""

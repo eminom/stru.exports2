@@ -17,9 +17,26 @@ struct EsNodeWrapper -> (class EsNode, "DDGraphics_EsNode")
 	void setVisible(bool visible);
 };
 
-struct BlenderNormalWrapper -> (class BlenderNormal, "DDGraphics_BlenderNormal", class BlenderNode){};
-struct BlenderNodeWrapper-> (class BlenderNode, "DDGraphics_BlenderNode", class EsNode){};
-struct AxisNodeWrapper -> (class AxisNode, "DDGraphics_AxisNode", class EsNode){};
-struct FieldNodeWrapper->(class FieldNode, "DDGraphics_FieldNode", class EsNode){};
-struct LightNodeWrapper->(class LightNode, "DDGraphics_LightNode", class EsNode){};
+struct BlenderNormalWrapper -> (class BlenderNormal, "DDGraphics_BlenderNormal", class BlenderNode)
+{
+};
+
+struct BlenderNodeWrapper-> (class BlenderNode, "DDGraphics_BlenderNode", class EsNode)
+{
+	void setFaceDefaultColor(float r, float g, float b, float a);
+};
+
+struct AxisNodeWrapper -> (class AxisNode, "DDGraphics_AxisNode", class EsNode)
+{
+};
+
+struct FieldNodeWrapper->(class FieldNode, "DDGraphics_FieldNode", class EsNode)
+{
+};
+
+struct LightNodeWrapper->(class LightNode, "DDGraphics_LightNode", class EsNode)
+{
+	void setTimeScale(float scale);
+};
+
 struct MimicNodeWrapper->(class MimicNode, "DDGraphics_MimicNode", class EsNode){};

@@ -3,6 +3,10 @@
 
 # config:
 
+# print $LOAD_PATH
+
+require "fileutils"
+
 module IGen
 	def self.node_path_finder
 		n_path = `which node`
@@ -18,9 +22,10 @@ module IGen
 		@node_path = node_path_finder
 		@script_path = File.absolute_path(File.dirname(__FILE__))
 		@input_path = "#{@script_path}/.input/#{@target_name}.stru"
-		@output_path = "#{@script_path}/#{@target_name}.json"
+		@output_path = "#{@script_path}/output/#{@target_name}.json"
 		@parser_path = "#{@script_path}/parser"
-		@output_inc  = "#{@script_path}/#{@target_name}.inc"
+		@output_inc  = "#{@script_path}/output/#{@target_name}.inc"
+		@output_base = "#{@script_path}/output"
 	end
 
 	def self.export_json
@@ -41,6 +46,12 @@ module IGen
 		print "#{@output_path} is updated.\n"
 	end
 
+	def self.make_dir
+		if not File.directory? @output_base then
+			FileUtils.mkdir_p @output_base
+		end
+	end
+
 	def self.export_inc
 		return if not File.exist?(@output_path)
 		return if File.exist?(@output_path) and File.exist?(@output_inc) \
@@ -59,5 +70,6 @@ module IGen
 end  #end of module
 
 IGen.init
+IGen.make_dir
 IGen.export_json
 IGen.export_inc

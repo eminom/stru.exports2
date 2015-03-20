@@ -6,6 +6,7 @@ static AxisNode* create();
 static FieldNode* create(int ac);
 static LightNode* create(float x, float y, float z);
 static MimicNode* create();	
+static CubeNode* create(float x, float y, float w,float h, float vh);
 
 struct EsNodeWrapper -> (class EsNode, "DDGraphics_EsNode")
 {
@@ -40,3 +41,9 @@ struct LightNodeWrapper->(class LightNode, "DDGraphics_LightNode", class EsNode)
 };
 
 struct MimicNodeWrapper->(class MimicNode, "DDGraphics_MimicNode", class EsNode){};
+
+struct CubeNodeWrapper->(class CubeNode, "DDGraphics_CubeNode", class EsNode)
+{
+	void shiftXZ();
+};
+

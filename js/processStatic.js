@@ -24,6 +24,11 @@ StaticProcessor.prototype.processStatic = function(ss){
 	var whole = '';
 	for(var i=0;i<pc;++i){
 		var one = ss.params[i];
+		//console.error("one.type is", one.type);
+		if(typeof(typeIn[one.type]) !== "function"){
+			console.error("Warning:" + one.type + " is currently unknown !");
+			console.error("In function:" + ss.type + "* " + ss.name);
+		}
 		var line = format("${Type} p${Index} = ${ComplexInput};",
 						{Type:one.type, Index:i+1,
 						ComplexInput:typeIn[one.type](i+1)

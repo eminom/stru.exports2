@@ -42,6 +42,21 @@ class {
 	return ConstString;
 }
 
+[0-9]+ {
+	yylval = strdup(yytext);
+	return ConstInteger;
+}
+
+[0-9]*\.[0-9]*[Ff] {
+	yylval = strdup(yytext);
+	return ConstFloat;
+}
+
+(true)|(false) {
+	yylval = strdup(yytext);
+	return ConstBoolean;
+}
+
 [a-zA-Z][a-zA-Z_0-9\$]* {
 	yylval = strdup(yytext);
 	return Var;

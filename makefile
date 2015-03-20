@@ -9,7 +9,7 @@ INCLUDE_DIRS =	-Isrc\
 all:
 	yacc -d stru2.y
 	flex stru2.l
-	gcc -std=c99 ${SOURCE} ${INCLUDE_DIRS} -o parser -lm
+	gcc -Wall -std=c99 ${SOURCE} ${INCLUDE_DIRS} -o parser -lm
 
 clean:
 	rm -rf y.tab.h y.tab.c lex.yy.c

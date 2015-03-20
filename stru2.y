@@ -19,12 +19,17 @@ extern char* strdup(const char*);
 #define FREE(_A)	{free(_A);_A=0;}
 #define CHECK_FREE(A)	if(A)FREE(A)
 
+#define AssertNull(a)	{if(a){fprintf(stderr, "\"%s\" is not null !\n", #a);}}
+
 %}
 
 %token TokenConst
 %token TokenStruct
 %token TokenClass
 %token ConstString
+%token ConstInteger
+%token ConstFloat
+%token ConstBoolean
 %token Var
 %token TokenSemicolon
 %token TokenLeftBracket
@@ -155,35 +160,51 @@ TokenComma Param ParamTail{}
 |{}
 
 Param:VarType Var{
-	curParam = se_createParamLink(curVarType, vt_Primitive, curParam);
+	curParam = se_createParamLink(curVarType, vt_Primitive, 0, curParam);
 
-	free(curVarType);
-	curVarType = 0;
-}
-|VarType {
-	curParam = se_createParamLink(curVarType, vt_Primitive, curParam);
-
-	free(curVarType);
-	curVarType = 0;
-}
-|TokenClass Var{
-	curParam = se_createParamLink($2, vt_Class, curParam);
-	free($2);
-}
-|VarType TokenEqual Var {
-	curParam = se_createParamLink(curVarType, vt_Primitive, curParam);
-
-	free($3);
-	free(curVarType);
-	curVarType = 0;
-}
-|VarType Var TokenEqual Var {
-	curParam = se_createParamLink(curVarType, vt_Primitive, curParam);
-
-	free($2);
-	free($4);
 	FREE(curVarType)
 }
+|VarType {
+	curParam = se_createParamLink(curVarType, vt_Primitive, 0, curParam);
+	FREE(curVarType)
+}
+|TokenClass Var{
+	curParam = se_createParamLink($2, vt_Class, 0, curParam);
+	free($2);
+}
+|VarType TokenEqual Constant {
+	curParam = se_createParamLink(curVarType, vt_Primitive, curParamDefault, curParam);
+	FREE(curVarType);
+	curParamDefault = 0; //Detached
+}
+|VarType Var TokenEqual Constant {
+	curParam = se_createParamLink(curVarType, vt_Primitive, curParamDefault, curParam);
+
+	free($2);
+	FREE(curVarType)
+	curParamDefault = 0; //Detached
+}
+
+Constant:
+ConstString{
+	AssertNull(curParamDefault)
+	curParamDefault = se_createParamDefault(dt_String, $1);
+	free($1);
+}
+|ConstInteger{
+	AssertNull(curParamDefault)
+	curParamDefault = se_createParamDefault(dt_Integer, $1);
+	free($1);
+}|ConstFloat {
+	AssertNull(curParamDefault)
+	curParamDefault = se_createParamDefault(dt_Float, $1);
+	free($1);
+}|ConstBoolean {
+	AssertNull(curParamDefault)
+	curParamDefault = se_createParamDefault(dt_Boolean, $1);
+	free($1);
+}
+
 
 VarType:
 Var{

@@ -12,7 +12,6 @@ all:
 	gcc -std=c99 ${SOURCE} ${INCLUDE_DIRS} -o parser -lm
 
 clean:
-	rm -rf parser
 	rm -rf y.tab.h y.tab.c lex.yy.c
 	rm -rf output
 

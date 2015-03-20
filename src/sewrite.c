@@ -136,7 +136,7 @@ cJSON* getType(VarType vt){
 	}
 }
 
-void _se_writeParamDefault(cJSON *obj, const char *type, ParamDefault *now, const char* methodName){
+void _se_writeParamDefault(cJSON *obj, ParamDefault *now, const char *type, const char* methodName){
 	if(!now){return;}
 	//Checking...
 	switch(now->var_default){
@@ -180,7 +180,7 @@ void _se_writeParamLinkRun(cJSON *ar, ParamLink *now, const char *methodName){
 	cJSON *o = cJSON_CreateObject();
 	cJSON_AddItemToObject(o, "isClass", getType(now->vt));
 	cJSON_AddItemToObject(o, "type", cJSON_CreateString(now->typeName));
-	_se_writeParamDefault(o, now->typeName, now->param_default, methodName);
+	_se_writeParamDefault(o, now->param_default, now->typeName, methodName);
 	//
 	cJSON_AddItemToArray(ar, o);
 }

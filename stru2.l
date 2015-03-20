@@ -87,7 +87,8 @@ class {
 }
 
 . {
-	fprintf(stderr,"Unknown token %s\n", yytext);
+	fprintf(stderr,"Unknown token \"%s\" in line %d\n", yytext, yylineno);
+	fprintf(stderr,"yyget_text() = \"%s\"\n", yyget_text());
 	abort();
 }
 

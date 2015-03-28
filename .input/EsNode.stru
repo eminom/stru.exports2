@@ -6,7 +6,7 @@ static AxisNode* create();
 static FieldNode* create(int ac);
 static LightNode* create(float x, float y, float z);
 static MimicNode* create();	
-static CubeNode* create(float x, float y, float w,float h, float vh);
+static CubeNode* create(float x, float y, float w = 0.1f,float h = 0.1f, float =0.1f);
 
 struct EsNodeWrapper -> (class EsNode, "DDGraphics_EsNode")
 {

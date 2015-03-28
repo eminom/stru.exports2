@@ -2,8 +2,8 @@
 static int ${MethodName}${ReturnType}(lua_State *L)
 {
 	int top = lua_gettop(L);
-	if(lua_gettop(L)!=${ParamCount}){
-		luaL_error(L, "Need %d parameters for %s", ${ParamCount}, __FUNCTION__);
+	if (top < ${ParamNoDefaultCount}){
+		luaL_error(L, "At least %d parameters for %s. %d would be best.", ${ParamNoDefaultCount}, __FUNCTION__, ${ParamCount});
 	}
 ${ParamFetching}	// For now, we are all EsNode derives. No one is special.
 	${WrapperClass} *rv = createUserData<${WrapperClass}>(L);

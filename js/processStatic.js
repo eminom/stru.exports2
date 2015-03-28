@@ -10,6 +10,21 @@ function loadTemplate(path){
 	return content;
 }
 
+var defaultValueTaker = {
+	bool:function(v){return v;},
+	int:function(v){return v;},
+	float:function(v){return v;},
+	"const char*":function(v){return "\"" + v + "\"";}
+};
+
+function genDefaultIn(type, value){
+	if(defaultValueTaker[type]){
+		//console.error("Gen one default");
+		return defaultValueTaker[type](value);
+	}
+	throw new Error("Cannot process default for type " + type);
+}
+
 function StaticProcessor(stdOut){
 	this.writestd = stdOut;
 }
@@ -20,7 +35,26 @@ StaticProcessor.prototype.processStatic = function(ss){
 	for(var i=0;i<pc;++i){
 		paramList += (i>0?',':'') + 'p' + (i+1);
 	}
+	//console.error("Processing ", ss.name, " " , ss.type, "*");
 
+	//Check for default consecutives:>>
+	var isNowDefault = false;
+	var noDefaultCount = 0;
+	for(var i=0;i<pc;++i){
+		var one = ss.params[i];
+		if(isNowDefault){
+			if(! one.default ){
+				throw new Error('Consecutive default must be fit for " + ss.name');
+			}
+		} else {
+			if(one.default){
+				isNowDefault = true; // And expecting the rest are all with defaults.
+			} else {
+				noDefaultCount++;
+			}
+		}
+	}
+	
 	var whole = '';
 	for(var i=0;i<pc;++i){
 		var one = ss.params[i];
@@ -29,18 +63,33 @@ StaticProcessor.prototype.processStatic = function(ss){
 			console.error("Warning:" + one.type + " is currently unknown !");
 			console.error("In function:" + ss.type + "* " + ss.name);
 		}
-		var line = format("${Type} p${Index} = ${ComplexInput};",
+
+		if(one.default){
+			var fmts = [
+				"${Type} p${Index};",
+				"if(top >= ${CurrentCount}) { p${Index} = ${ComplexInput}; }",
+				"else { p${Index} = ${DefaultIn}; }"
+			];
+			var opts = { Type:one.type, CurrentCount:i+1, Index:i+1, ComplexInput:typeIn[one.type](i+1), DefaultIn:genDefaultIn(one.type, one.default) };
+			for(var a=0;a<fmts.length;++a){
+					var line = format(fmts[a], opts);
+					whole += "\t" + line + "\n";
+			}
+		} else {
+			var line = format("${Type} p${Index} = ${ComplexInput};",
 						{Type:one.type, Index:i+1,
 						ComplexInput:typeIn[one.type](i+1)
 						}
 					);
-		whole += '\t' + line + '\n';
+			whole += '\t' + line + '\n';
+		}
 	}
 
 	var tmpl = loadTemplate('tmpl/creator');
 	var out = format(tmpl, {
 		MethodName:ss.name,
 		ReturnType:ss.type,
+		ParamNoDefaultCount:noDefaultCount,
 		ParamCount:ss.params.length,
 		WrapperClass:ss.type + 'Wrapper',  // customized. 
 		ParamFetching:whole, 

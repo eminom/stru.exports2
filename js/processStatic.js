@@ -44,7 +44,7 @@ StaticProcessor.prototype.processStatic = function(ss){
 		var one = ss.params[i];
 		if(isNowDefault){
 			if(! one.default ){
-				throw new Error('Consecutive default must be fit for " + ss.name');
+				throw new Error("Consecutive default must be fit for " + ss.name + ":" + ss.type + "*");
 			}
 		} else {
 			if(one.default){

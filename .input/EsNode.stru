@@ -7,6 +7,7 @@ static FieldNode* create(int ac);
 static LightNode* create(float x, float y, float z);
 static MimicNode* create();	
 static CubeNode* create(float x, float y, float w = 0.1f,float h = 0.1f, float =0.1f);
+static ParticleNode* create(int pc=5000);
 
 struct EsNodeWrapper -> (class EsNode, "DDGraphics_EsNode")
 {
@@ -16,6 +17,11 @@ struct EsNodeWrapper -> (class EsNode, "DDGraphics_EsNode")
 	void setTransform(float xf, float yf, float zf);
 	void setRotate(float radians, float x, float y, float z);
 	void setVisible(bool visible);
+};
+
+struct ParticleNodeWrapper ->(class ParticleNode, 
+	"DDGraphics_ParticleNode", class EsNode)
+{
 };
 
 struct BlenderNormalWrapper -> (class BlenderNormal, "DDGraphics_BlenderNormal", class BlenderNode)

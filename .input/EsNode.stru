@@ -8,6 +8,8 @@ static LightNode* create(float x, float y, float z);
 static MimicNode* create();	
 static CubeNode* create(float x, float y, float w = 0.1f,float h = 0.1f, float =0.1f);
 static ParticleNode* create(int pc=5000);
+static BlenderParticle* create(const char *name, int pc
+   , float scale=0.1f, float x = 0.0f, float y = 0.0f, float z = 0.0f);
 
 struct EsNodeWrapper -> (class EsNode, "DDGraphics_EsNode")
 {
@@ -24,9 +26,16 @@ struct ParticleNodeWrapper ->(class ParticleNode,
 {
 };
 
+struct BlenderParticleWrapper->(class BlenderParticle
+  , "DDGraphics_BlenderParticle"
+	, class BlenderNormal)
+{
+};
+
 struct BlenderNormalWrapper -> (class BlenderNormal, "DDGraphics_BlenderNormal", class BlenderNode)
 {
 };
+
 
 struct BlenderNodeWrapper-> (class BlenderNode, "DDGraphics_BlenderNode", class EsNode)
 {

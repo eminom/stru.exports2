@@ -215,6 +215,20 @@ ContentProcessor.prototype.processStru = function(stru){
 	this.writestd.format(tailFmt, options);
 };
 
+ContentProcessor.prototype.processLoader=function(stru){
+	if(this._loader[stru.origin]){
+		return;
+	}
+	if(stru.base){
+		var parent = this._contentMap[stru.base];
+		this.processLoader(parent);
+	}
+	this._loader[stru.origin] = true;
+	this.writestd.format("  load${ExportingClass}TmpIndex();\\",{
+		ExportingClass:stru.origin
+	});
+}
+
 ContentProcessor.prototype.process = function(content){
 	assert(Array.isArray(content));
 	var length = content.length;
@@ -232,6 +246,15 @@ ContentProcessor.prototype.process = function(content){
 	for(var i=0;i<length;++i){
 		this.processStru(content[i]);
 	}
+
+	//~ And further more
+	//Not an ad-hoc way.
+	this._loader = {}
+	this.writestd.out("#define EXPORT_LOADNODES()\\");
+	for(var i=0;i<length;++i){
+		this.processLoader(content[i]);
+	}
+	this.writestd.out("");
 };
 
 module.exports = ContentProcessor;

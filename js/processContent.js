@@ -224,7 +224,7 @@ ContentProcessor.prototype.processLoader=function(stru){
 		this.processLoader(parent);
 	}
 	this._loader[stru.origin] = true;
-	this.writestd.format("  load${ExportingClass}TmpIndex();\\",{
+	this.writestd.format("  load${ExportingClass}TmpIndex(L);\\",{
 		ExportingClass:stru.origin
 	});
 }

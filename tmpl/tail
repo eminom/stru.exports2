@@ -1,9 +1,9 @@
 
 //This is the only thing you need to code yourself.
 
-void load${ExportingClass}TmpIndex()
+void load${ExportingClass}TmpIndex(lua_State*L)
 {
-	_DeclareState()
+	//_DeclareState()
 	luaL_newmetatable(L, _${ExportingClass}MetaString);	
 
 	// If it is necessary to get a GC for our class.

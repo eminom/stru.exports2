@@ -118,7 +118,7 @@ StaticProcessor.prototype.process = function(statics){
 	this.writestd.out("{NULL, NULL}");
 	this.writestd.pop();
 	this.writestd.out('};');
-	this.writestd.out("void load_ddStatics(){ _DeclareState() luaL_register(L, \"dd\", _ddStatics); }");
+	this.writestd.out("void load_ddStatics(lua_State*L){ luaL_register(L, \"dd\", _ddStatics); }");
 };
 
 

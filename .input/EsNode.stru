@@ -53,6 +53,8 @@ struct FieldNodeWrapper->(class FieldNode, "DDGraphics_FieldNode", class EsNode)
 struct LightNodeWrapper->(class LightNode, "DDGraphics_LightNode", class EsNode)
 {
 	void setTimeScale(float scale);
+	void setVAngleSpeed(float val);
+	void setHAngleSpeed(float val);
 };
 
 struct MimicNodeWrapper->(class MimicNode, "DDGraphics_MimicNode", class EsNode){};

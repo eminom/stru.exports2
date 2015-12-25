@@ -4,6 +4,7 @@
 void load${ExportingClass}TmpIndex(lua_State*L)
 {
 	//_DeclareState()
+	_BC(L);
 	luaL_newmetatable(L, _${ExportingClass}MetaString);	
 
 	// If it is necessary to get a GC for our class.
@@ -20,4 +21,5 @@ void load${ExportingClass}TmpIndex(lua_State*L)
 	luaL_getmetatable(L, _${BaseClass}MetaString);
 	lua_setmetatable(L, -2);
 #endif
+	lua_pop(L, 1);
 }
